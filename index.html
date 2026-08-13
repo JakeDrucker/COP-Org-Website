@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Gies Student Organization Directory</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+
+        header {
+            background: #13294B;
+            color: white;
+            padding: 35px 20px;
+            text-align: center;
+        }
+
+        .gies {
+            color: #FA6300;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        header h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            max-width: 650px;
+            margin: auto;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+
+        /* MAIN */
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* SEARCH */
+
+        .search-box {
+            margin-bottom: 25px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 15px 18px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            outline: none;
+            background: white;
+        }
+
+        .search-box input:focus {
+            border-color: #FA6300;
+        }
+
+        /* FILTERS */
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 30px;
+        }
+
+        .filter-btn {
+            border: none;
+            background: white;
+            border: 1px solid #ddd;
+            padding: 9px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .filter-btn:hover {
+            border-color: #FA6300;
+        }
+
+        .filter-btn.active {
+            background: #FA6300;
+            color: white;
+            border-color: #FA6300;
+        }
+
+        /* DIRECTORY */
+
+        .directory {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* ORGANIZATION CARD */
+
+        .org-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: 0.2s;
+        }
+
+        .org-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.12);
+        }
+
+        .org-category {
+            color: #FA6300;
+            font-size: 13px;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+        }
+
+        .org-card h2 {
+            color: #13294B;
+            font-size: 21px;
+            margin-bottom: 10px;
+        }
+
+        .org-card p {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .recruiting {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 9px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .not-recruiting {
+            display: inline-block;
+            background: #eeeeee;
+            color: #666;
+            font-size: 12px;
+            font-weight: bold;
+            padding: 5px 9px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            width: fit-content;
+        }
+
+        .details {
+            font-size: 13px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .details strong {
+            color: #333;
+        }
+
+        .learn-more {
+            margin-top: auto;
+            display: inline-block;
+            text-align: center;
+            background: #13294B;
+            color: white;
+            text-decoration: none;
+            padding: 10px 15px;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .learn-more:hover {
+            background: #FA6300;
+        }
+
+        /* NO RESULTS */
+
+        #noResults {
+            display: none;
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+        /* FOOTER */
+
+        footer {
+            background: #13294B;
+            color: white;
+            text-align: center;
+            padding: 25px;
+            margin-top: 40px;
+            font-size: 13px;
+        }
+
+        footer span {
+            color: #FA6300;
+            font-weight: bold;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            header {
+                padding: 28px 15px;
+            }
+
+            header h1 {
+                font-size: 25px;
+            }
+
+            .container {
+                padding: 20px 15px;
+            }
+
+            .directory {
+                grid-template-columns: 1fr;
+            }
+
+            .filters {
+                gap: 6px;
+            }
+
+            .filter-btn {
+                padding: 8px 12px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<header>
+
+    <div class="gies">GIES COLLEGE OF BUSINESS</div>
+
+    <h1>Student Organization Directory</h1>
+
+    <p>
+        Explore student organizations, find your community,
+        and discover opportunities to get involved at Gies.
+    </p>
+
+</header>
+
+
+<main class="container">
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="🔍 Search organizations..."
+            onkeyup="filterOrganizations()"
+        >
+
+    </div>
+
+
+    <!-- FILTERS -->
+
+    <div class="filters">
+
+        <button class="filter-btn active"
+                onclick="setCategory('All', this)">
+            All
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Professional', this)">
+            Professional
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Academic', this)">
+            Academic
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Finance', this)">
+            Finance
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Data', this)">
+            Data & Analytics
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Social', this)">
+            Social
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Service', this)">
+            Service
+        </button>
+
+        <button class="filter-btn"
+                onclick="setCategory('Entrepreneurship', this)">
+            Entrepreneurship
+        </button>
+
+    </div>
+
+
+    <!-- ORGANIZATIONS -->
+
+    <div class="directory" id="directory">
+
+
+        <!-- ORGANIZATION 1 -->
+
+        <div class="org-card" data-category="Professional">
+
+            <div class="org-category">
+                Professional
+            </div>
+
+            <h2>Beta Alpha Psi</h2>
+
+            <p>
+                A professional organization focused on accounting,
+                networking, professional development, and career
+                opportunities.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                August 25 – September 5
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!-- ORGANIZATION 2 -->
+
+        <div class="org-card" data-category="Data">
+
+            <div class="org-category">
+                Data & Analytics
+            </div>
+
+            <h2>Data Science Club</h2>
+
+            <p>
+                Explore data science, analytics, machine learning,
+                and real-world applications of data.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                August 25 – September 5
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!-- ORGANIZATION 3 -->
+
+        <div class="org-card" data-category="Finance">
+
+            <div class="org-category">
+                Finance
+            </div>
+
+            <h2>Finance Club</h2>
+
+            <p>
+                Develop financial knowledge, connect with industry
+                professionals, and explore careers in finance.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                August 25 – September 5
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!-- ORGANIZATION 4 -->
+
+        <div class="org-card" data-category="Academic">
+
+            <div class="org-category">
+                Academic
+            </div>
+
+            <h2>Accounting Club</h2>
+
+            <p>
+                Connect with fellow accounting students and learn
+                more about accounting careers and professional
+                opportunities.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                August 25 – September 5
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!-- ORGANIZATION 5 -->
+
+        <div class="org-card" data-category="Entrepreneurship">
+
+            <div class="org-category">
+                Entrepreneurship
+            </div>
+
+            <h2>Entrepreneurship Club</h2>
+
+            <p>
+                Learn about entrepreneurship, startups, innovation,
+                and building businesses.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                August 25 – September 5
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!-- ORGANIZATION 6 -->
+
+        <div class="org-card" data-category="Social">
+
+            <div class="org-category">
+                Social
+            </div>
+
+            <h2>Organization Name</h2>
+
+            <p>
+                Add your organization description here.
+            </p>
+
+            <div class="recruiting">
+                🟢 Recruiting Now
+            </div>
+
+            <div class="details">
+
+                <strong>Meeting:</strong> Weekly<br>
+
+                <strong>Recruitment:</strong>
+                Add recruitment dates
+
+            </div>
+
+            <a href="#" class="learn-more">
+                Learn More →
+            </a>
+
+        </div>
+
+
+        <!--
+        COPY THE ORGANIZATION CARD ABOVE
+        TO ADD THE REST OF YOUR ORGANIZATIONS.
+
+        You can have all 30 organizations here.
+        -->
+
+
+    </div>
+
+
+    <div id="noResults">
+
+        <h2>No organizations found.</h2>
+
+        <p>
+            Try another search or category.
+        </p>
+
+    </div>
+
+</main>
+
+
+<footer>
+
+    Gies College of Business
+    <br>
+
+    <span>University of Illinois Urbana-Champaign</span>
+
+</footer>
+
+
+<script>
+
+    let selectedCategory = "All";
+
+
+    function setCategory(category, button) {
+
+        selectedCategory = category;
+
+        // Remove active class from all buttons
+
+        document
+            .querySelectorAll(".filter-btn")
+            .forEach(btn => btn.classList.remove("active"));
+
+        // Add active class to selected button
+
+        button.classList.add("active");
+
+        filterOrganizations();
+
+    }
+
+
+    function filterOrganizations() {
+
+        const search =
+            document
+            .getElementById("searchInput")
+            .value
+            .toLowerCase();
+
+        const cards =
+            document.querySelectorAll(".org-card");
+
+        let visibleCount = 0;
+
+
+        cards.forEach(card => {
+
+            const name =
+                card.querySelector("h2")
+                    .textContent
+                    .toLowerCase();
+
+            const description =
+                card.querySelector("p")
+                    .textContent
+                    .toLowerCase();
+
+            const category =
+                card.dataset.category;
+
+
+            const matchesSearch =
+                name.includes(search) ||
+                description.includes(search);
+
+            const matchesCategory =
+                selectedCategory === "All" ||
+                category === selectedCategory;
+
+
+            if (matchesSearch && matchesCategory) {
+
+                card.style.display = "flex";
+
+                visibleCount++;
+
+            } else {
+
+                card.style.display = "none";
+
+            }
+
+        });
+
+
+        // Show "no results" message
+
+        if (visibleCount === 0) {
+
+            document.getElementById("noResults")
+                .style.display = "block";
+
+        } else {
+
+            document.getElementById("noResults")
+                .style.display = "none";
+
+        }
+
+    }
+
+</script>
+
+</body>
+</html>
