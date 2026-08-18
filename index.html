@@ -110,9 +110,10 @@
 
         .directory {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(2,minmax( 1fr));
             gap: 24px;
             align-items:start;
+            grid-auto-rows:1fr;
         }
 
         /* ORGANIZATION CARD */
@@ -126,6 +127,7 @@
             flex-direction: column;
             transition: 0.2s;
             min-height: 300px;
+            height: 100%;
             overflow-wrap: break-word;
         }
 
